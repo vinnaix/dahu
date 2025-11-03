@@ -1,0 +1,11 @@
+{
+  "DEFSettings":{
+    "outputQueues":["queue1"],
+    "serviceGroup":"TestInstanceService",
+    "threads":"1"
+  },
+  "pluginSettings":{
+    "autoStart": "true",
+    "filepath_to_inject":"/Users/vmcnamar/testData/edge1.txt"
+  }
+}

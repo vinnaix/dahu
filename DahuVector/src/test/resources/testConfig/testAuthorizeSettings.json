@@ -1,0 +1,22 @@
+{
+  "DEFSettings":{},
+  "pluginSettings": {
+    "resources": {
+      "admin": {
+        "roles": "admin"
+      },
+      "api/Services/TestInstanceService/testInstance1": {
+        "roles": "admin,api"
+      },
+      "api/testCommand/status": {
+        "roles": "admin,api"
+      },
+      "api/poke": {
+        "roles": "admin,api"
+      },
+      "api/push": {
+        "roles": "admin,api"
+      }
+    }
+  }
+}

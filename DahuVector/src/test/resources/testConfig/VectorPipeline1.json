@@ -1,0 +1,21 @@
+{
+  "DEFSettings":{
+    "inputQueues":["queue1"],
+    "serviceGroup":"Test Vector Pipeline"
+  },
+  "pluginSettings": {
+    "autoStart":"true",
+    "components":{
+      "DebugProcessor":{
+        "priority":"1"
+      },
+      "SolrIndexer": {
+        "solr_index":"test_fs_v4",
+        "solr_hostname":"dolly.office.dahu.co.uk",
+        "solr_zkport":"8983",
+        "logLevel":"TRACE",
+        "solrSchemaMap":"DahuSolrSchema.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "logLevel": "TRACE",
+  "name": "DEF BOO!",
+  "port": "10106",
+  "uiPort": "8086",
+  "threads": "40",
+  "admin": "true",
+  "UI": "true",
+  "adminUI": "true",
+  "docRoot": "./docroot",
+  "plugins": "../target/testPlugins",
+  "crossOrigin": "false",
+  "responseVersion": "2",
+  "securityTokenTTL":"100",
+  "securityTokenMaxTTL":"600",
+  "DEFRolesFile": "roles.json",
+  "services": [
+    {
+      "name":"DummyDocProducer",
+      "jar":"DahuVector.tests.jar",
+      "class":"com.dahu.plugins.core.DummyQueueProducer",
+      "settingsFile":"dummyDoc.json"
+    },
+    {
+      "name":"Vector1",
+      "class":"com.dahu.vector.core.VectorService",
+      "settingsFile":"VectorPipeline1.json",
+      "logLevel":"TRACE",
+      "threads":"2"
+    },
+    {
+      "name":"Vector2",
+      "class":"com.dahu.vector.core.VectorService",
+      "settingsFile":"VectorPipeline2.json",
+      "logLevel":"TRACE",
+      "threads":"2"
+    }
+
+  ],
+  "queues": [{"name":"queue1"},{"name":"queue2"}],
+  "components": [
+    {
+      "name":"SolrIndexer",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.indexers.solr.SolrCloudIndexer"
+    },{
+      "name":"DebugProcessor",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.processors.DebugProcessor"
+    },
+    {
+      "name": "authenticator",
+      "class": "com.dahu.plugins.core.auth.SimpleAuthenticator",
+      "settingsFile": "testAuthSettings.json"
+    },
+    {
+      "name": "authorizer",
+      "class": "com.dahu.plugins.core.auth.SimpleAuthorizer",
+      "settingsFile": "testAuthorizeSettings.json"
+    }
+
+  ],
+  "events":[
+    {
+      "name":"solrCommit",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.indexers.solr.CommitToSolr",
+      "settingsFile":"solrCommit.json"
+    }
+  ]
+}

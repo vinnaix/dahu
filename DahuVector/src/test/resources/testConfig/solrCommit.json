@@ -1,0 +1,12 @@
+{
+  "DEFSettings":{
+    "runAtStartup":"false"
+  },
+  "pluginSettings":{
+    "interval":"60000",
+    "solr_index":"test_fs_v4",
+    "solr_hostname":"dolly.office.dahu.co.uk",
+    "solr_port":"8983",
+    "logLevel":"TRACE"
+  }
+}

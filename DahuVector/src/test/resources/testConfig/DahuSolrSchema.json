@@ -1,0 +1,17 @@
+{
+  "iDoc2Solr":[
+    {"idocField":"author","solrField":"author","multi":true},
+    {"idocField":"domain","solrField":"domain","multi":false},
+    {"idocField":"libraryId","solrField":"libraryId","multi":false},
+    {"idocField":"classId","solrField":"classId","multi":false},
+    {"idocField":"className","solrField":"className","multi":false},
+    {"idocField":"iconurl","solrField":"iconurl","multi":false},
+    {"idocField":"permissions","solrField":"ao_permission","multi":true},
+    {"idocField":"tags","solrField":"tags","multi":true},
+    {"idocField":"category","solrField":"category","multi":true},
+    {"idocField":"client","solrField":"category","multi":false},
+    {"idocField":"dahucustomtextfield","solrField":"dahucustomtextfield","multi":false},
+    {"idocField":"dahucustomstringfield","solrField":"dahucustomstringfield","multi":false},
+    {"idocField":"dahucustompersonfield","solrField":"dahucustompersonfield","multi":false}
+  ]
+}
