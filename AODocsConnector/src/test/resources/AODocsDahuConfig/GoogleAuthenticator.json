@@ -1,0 +1,9 @@
+{
+  "DEFSettings":{},
+  "pluginSettings": {
+    "google_service_jsonfile_path":  {"type": "env","values": {"env_name": "GOOGLE_SERVICE_ACCOUNT_JSON_PATH","default": "./serviceaccount.json"}},
+    "domain_admin_account":  {"type": "env","values": {"env_name": "AODOCS_DOMAIN_ADMIN","default": "dummy_account@dahu.co.uk"}},
+    "appName":  {"type": "env","values": {"env_name": "APPNAME","default": "Dahu Search"}}
+  }
+}
+

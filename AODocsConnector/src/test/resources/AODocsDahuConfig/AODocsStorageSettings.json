@@ -1,0 +1,7 @@
+{
+  "DEFSettings":{},
+  "pluginSettings":{
+    "name":"AODocsConnectorStore",
+    "aodocsStoragePath":"/var/deflogs/connector/aodocs_dahu.csv"
+  }
+}

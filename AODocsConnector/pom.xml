@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Use this pom to build a deployable kit. It has the necessary components for its deliverable, and
+should include any other modules (like DEFServer needed - although its down to you (or Jenkins) to pull
+them and make sure they are the correct versions -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- You need to pull the correct version of DEFServer into a directory called 'DEFServer' at the same
+    level as this module. Please make sure you pull the correct version if you are re-building this kit  -->
+    <properties>
+        <DahuDEFServer.version>3.4.4-SNAPSHOT</DahuDEFServer.version>
+        <DahuSearchUI.version>3.3.4</DahuSearchUI.version>
+        <DahuVector.version>3.4.1-SNAPSHOT</DahuVector.version>
+        <DahuEdge.version>3.4.1-SNAPSHOT</DahuEdge.version>
+        <log4j.version>2.10.0</log4j.version>
+        <skipTests>true</skipTests>
+        <skipZip>true</skipZip>
+    </properties>
+    <scm>
+        <developerConnection>scm:svn:https://dahu.codebasehq.com/dahu-edge-framework/def.svn/trunk/builds-Dahu/${project.artifactId}</developerConnection>
+    </scm>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.dahu</groupId>
+    <artifactId>DahuAODocsConnector</artifactId>
+    <name>AODocs Connector</name>
+    <version>1.0.5-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <name>Archiva Managed Internal Repository</name>
+            <url>http://18.130.39.61:8080/repository/internal/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Archiva Managed Snapshot Repository</name>
+            <url>http://18.130.39.61:8080/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- we have a few other directories that we create - get rid of them when we do a 'clean' -->
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>testHarness</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>run</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>target</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.14.1</version>
+                <configuration>
+                    <skip>${skipTests}</skip>
+                    <forkMode>once</forkMode>
+                    <argLine>-Djava.library.path=./src/main/natives/mac-x86_64</argLine>
+                    <!-- Suite testng xml file to consider for test execution -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+            <!-- Shade plugin is used to actually build the component jar file, in this case (DEF Server) with a manifest
+            that loads the log4j jars delivered separately by the deployment project because of a naming clash within the two
+            jars. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>config/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                            </artifactSet>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Implementation-Title>com.dahu</Implementation-Title>
+                                        <Implementation-Version>${project.version}</Implementation-Version>
+                                        <Implementation-Vendor>Dahu Ltd</Implementation-Vendor>
+                                        <Class-Path>./log4j-api-${log4j.version}.jar ./log4j-core-${log4j.version}.jar</Class-Path>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- we copy the full 'with dependencies' jar file to a version without the version number, and
+         <! we also do the same with the IntegrationTests jar. This is for integration testing and not for packaging
+         which is always done by a deliverable project not a component project-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-apache-regexp</artifactId>
+                        <version>1.10.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <tasks>
+                                <echo>creating new folders in ${basedir}/target</echo>
+                                <mkdir dir="${basedir}/target/testPlugins" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!-- need to rename DahuVector-$version.jar and DahuDEFServer-$version.jar so that the tests will run - they expect jars without versions in the name  -->
+                                <!-- the variable ${project.build.directory} is either target or target/checkout/target depending on the phase - this works -->
+                                <copy todir="${project.build.directory}">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="${project.artifactId}-${project.version}.jar" />
+                                        <include name="DahuDEFServer-${DahuDEFServer.version}.jar" />
+                                        <include name="DahuVector-${DahuVector.version}.jar" />
+                                    </fileset>
+                                    <mapper type="regexp" from="^(.+?)-[0-9]+.*\.jar$" to="\1.jar" />
+                                </copy>
+                                <copy todir="${basedir}/target/testPlugins">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="DahuVector-${DahuVector.version}.jar" />
+                                        <include name="${project.artifactId}-${project.version}.jar" />
+                                        <include name="DahuDEFServer-${DahuDEFServer.version}.jar" />
+                                    </fileset>
+                                    <mapper type="regexp" from="^(.+?)-[0-9]+.*\.jar$" to="\1.jar" />
+                                </copy>
+                                <copy todir="${basedir}/target/testPlugins">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="${project.artifactId}*tests.jar" />
+                                    </fileset>
+                                    <mapper type="regexp" from="^(.+?)-[0-9]+.*\.jar$" to="\1.tests.jar" />
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>DahuCore.iml</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                <execution>
+                    <id>unpack-and-copy-ui-zip</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                        <goal>unpack-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <stripVersion>true</stripVersion>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>com.dahu</groupId>
+                                <artifactId>DahuSearchUI</artifactId>
+                                <version>${DahuSearchUI.version}</version>
+                                <classifier>resources</classifier>
+                                <overWrite>true</overWrite>
+                                <type>zip</type>
+                            </artifactItem>
+                        </artifactItems>
+                        <excludeTypes>pom</excludeTypes>
+                        <excludeTypes>jar</excludeTypes>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>unpack-and-copy-server-zip</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                        <goal>unpack-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <stripVersion>true</stripVersion>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>com.dahu</groupId>
+                                <artifactId>DahuDEFServer</artifactId>
+                                <version>${DahuDEFServer.version}</version>
+                                <classifier>resources</classifier>
+                                <overWrite>true</overWrite>
+                                <type>zip</type>
+                            </artifactItem>
+                        </artifactItems>
+                        <excludeTypes>pom</excludeTypes>
+                        <excludeTypes>jar</excludeTypes>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>copy-vector</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                    </goals>
+                    <configuration>
+                        <stripVersion>true</stripVersion>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>com.dahu</groupId>
+                                <artifactId>DahuVector</artifactId>
+                                <version>${DahuVector.version}</version>
+                                <overWrite>true</overWrite>
+                                <type>jar</type>
+                                <outputDirectory>${basedir}/run/lib</outputDirectory>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+
+                <execution>
+                    <id>copy-DEFServer</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                    </goals>
+                    <configuration>
+                        <stripVersion>true</stripVersion>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>com.dahu</groupId>
+                                <artifactId>DahuDEFServer</artifactId>
+                                <version>${DahuDEFServer.version}</version>
+                                <overWrite>true</overWrite>
+                                <type>jar</type>
+                                <outputDirectory>${basedir}/run/lib</outputDirectory>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>copy-log4j-api</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                    </goals>
+                    <configuration>
+                        <stripVersion>false</stripVersion>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>org.apache.logging.log4j</groupId>
+                                <artifactId>log4j-api</artifactId>
+                                <version>${log4j.version}</version>
+                                <type>jar</type>
+                                <overWrite>true</overWrite>
+                                <outputDirectory>${basedir}/run/lib</outputDirectory>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>copy-log4j-core</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                    </goals>
+                    <configuration>
+                        <stripVersion>false</stripVersion>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>org.apache.logging.log4j</groupId>
+                                <artifactId>log4j-core</artifactId>
+                                <version>${log4j.version}</version>
+                                <type>jar</type>
+                                <overWrite>true</overWrite>
+                                <outputDirectory>${basedir}/run/lib</outputDirectory>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+                </executions>
+                <configuration>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>true</overWriteSnapshots>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-apache-regexp</artifactId>
+                        <version>1.10.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>generate-test-sources</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <tasks>
+                                <echo>creating new folders in ./</echo>
+                                <mkdir dir="TestHarness" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+
+                    <execution>
+                        <id>generate-run-directories</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <tasks>
+                                <echo>creating new folders in ${basedir}</echo>
+                                <mkdir dir="${basedir}/run" />
+                                <mkdir dir="${basedir}/run/lib" />
+                                <mkdir dir="${basedir}/run/lib/native" />
+                                <mkdir dir="${basedir}/run/tools" />
+                                <mkdir dir="${basedir}/run/logs" />
+                                <mkdir dir="${basedir}/run/config" />
+                                <mkdir dir="${basedir}/run/docRoot" />
+                                <mkdir dir="${basedir}/target/docRoot" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>copy-run-resources</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+
+                                <copy todir="${basedir}/run/lib">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="${project.artifactId}*.jar" />
+                                    </fileset>
+                                    <mapper type="regexp" from="^(.+?)-[0-9]+.*\.jar$" to="\1.jar" />
+                                </copy>
+                                <copy todir="${basedir}/run/config">
+                                    <fileset dir="${basedir}/src/main/resources/config">
+                                        <include name="**" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run/AODocsDahuConfig">
+                                    <fileset dir="${basedir}/src/test/resources/AODocsDahuConfig">
+                                        <include name="**" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run/lib/native">
+                                    <fileset dir="${basedir}/src/main/natives">
+                                        <include name="**" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run">
+                                    <fileset dir="${project.build.directory}/dependency/DahuDEFServer-${DahuDEFServer.version}">
+                                        <include name="*.jks" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run/tools">
+                                    <fileset dir="${project.build.directory}/dependency/DahuDEFServer-${DahuDEFServer.version}/tools">
+                                        <include name="*.sh" />
+                                        <include name="*.exe" />
+                                        <include name="*.bat" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run/tools">
+                                    <fileset dir="${basedir}/src/main/resources/tools">
+                                        <include name="*.sh" />
+                                        <include name="*.exe" />
+                                        <include name="*.bat" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run">
+                                    <fileset dir="${basedir}/src/main/resources/tools">
+                                        <include name="*.pl" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run">
+                                    <fileset dir="${basedir}/src/main/resources">
+                                        <include name="*.p12" />
+                                        <include name="*.json" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/run/docRoot">
+                                    <fileset dir="${project.build.directory}/dependency/DahuSearchUI-${DahuSearchUI.version}/docRoot">
+                                        <include name="**" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/target/docRoot">
+                                    <fileset dir="${project.build.directory}/dependency/DahuSearchUI-${DahuSearchUI.version}/docRoot">
+                                        <include name="**" />
+                                    </fileset>
+                                </copy>
+                                <chmod perm="755">
+                                    <fileset dir="${basedir}/run/tools">
+                                        <include name="*.sh" />
+                                    </fileset>
+                                </chmod>
+
+                            </tasks>
+                        </configuration>
+                    </execution>
+
+                    <!-- We also want to build all this stuff in target/testPlugins for the purposes of testing and that -->
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <tasks>
+                                <echo>creating new folders in ${basedir}/target</echo>
+                                <mkdir dir="${basedir}/target/testPlugins" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${basedir}/target/testPlugins">
+                                    <fileset dir="${basedir}/run/lib">
+                                        <include name="*.jar" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/target">
+                                    <fileset dir="${basedir}/run/lib">
+                                        <include name="*.jar" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/target/testPlugins">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="${project.artifactId}*.jar" />
+                                    </fileset>
+                                    <mapper type="regexp" from="^(.+?)-[0-9]+.*\.jar$" to="\1.jar" />
+                                </copy>
+                                <copy todir="${basedir}/target">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="${project.artifactId}*.jar" />
+                                    </fileset>
+                                    <mapper type="regexp" from="^(.+?)-[0-9]+.*\.jar$" to="\1.jar" />
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>DahuCore.iml</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>{basedir}/run</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/UIunpack/DahuSearchUI-${DahuSearchUI.version}/docRoot</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>com.dahu</groupId>
+            <artifactId>DahuDEFServer</artifactId>
+            <version>${DahuDEFServer.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dahu</groupId>
+            <artifactId>DahuDEFServer</artifactId>
+            <version>${DahuDEFServer.version}</version>
+            <classifier>resources</classifier>
+            <type>zip</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dahu</groupId>
+            <artifactId>DahuVector</artifactId>
+            <version>${DahuVector.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dahu</groupId>
+            <artifactId>DahuSearchUI</artifactId>
+            <version>${DahuSearchUI.version}</version>
+            <classifier>resources</classifier>
+            <type>zip</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- We include log4j so that we can build the lib directory with these jars in it.
+        this is to get round the crashing resource issue we get if we package them in the
+        shaded jar -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.24.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.14.3</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v3-rev165-1.25.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>1.24.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson2</artifactId>
+            <version>1.24.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>0.16.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-credentials</artifactId>
+            <version>0.16.2</version>
+        </dependency>
+
+
+    </dependencies>
+</project>

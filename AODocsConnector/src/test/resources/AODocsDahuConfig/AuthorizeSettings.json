@@ -1,0 +1,16 @@
+{
+  "DEFSettings":{},
+  "pluginSettings": {
+    "resources": {
+      "admin": {
+        "roles": "admin"
+      },
+      "api/push": {
+        "roles": "admin,api"
+      },
+      "api":{
+        "roles": "admin,api"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "DEFSettings":{
+    "inputQueues":["vector_queue"],
+    "serviceGroup":"Vector"
+  },
+  "pluginSettings": {
+    "autoStart":"true",
+    "components":{
+      "AODocsFetchInjector":{
+        "priority":"1",
+        "pretika":"true",
+        "google_service_jsonfile_path":  {"type": "env","values": {"env_name": "GOOGLE_SERVICE_ACCOUNT_JSON_PATH","default": "./serviceaccount.json"}}
+      },
+      "SplitterProcessor":{
+        "priority":"1",
+        "hier_metanames":"folderpath"
+      },
+      "MimeTypePrettifier": {
+        "priority": "2"
+      },
+      "SolrIndexer": {
+        "priority": "99",
+        "solr_index":"aodocs_index",
+        "solr_hostname":{"type": "env","values": {"env_name": "SOLR_HOSTNAME","default": "dolly.office.dahu.co.uk"}},
+        "cloud_solr_hostname":{"type": "env","values": {"env_name": "SOLR_HOSTNAME","default": "solr-svc.default.svc.cluster.local"}},
+        "solr_zkport":"8983",
+        "solrSchemaMap":"AODocsSolrSchema.json"
+      }
+    }
+  }
+}

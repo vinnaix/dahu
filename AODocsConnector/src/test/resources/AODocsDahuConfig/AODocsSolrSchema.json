@@ -1,0 +1,26 @@
+{
+  "iDoc2Solr":[
+    {"idocField":"domain","solrField":"domain","multi":false},
+    {"idocField":"libraryid","solrField":"libraryid","multi":false},
+    {"idocField":"libraryname","solrField":"libraryname","multi":false},
+    {"idocField":"classid","solrField":"classid","multi":false},
+    {"idocField":"classname","solrField":"classname","multi":false},
+    {"idocField":"iconurl","solrField":"iconurl","multi":false},
+    {"idocField":"initialauthor","solrField":"initialauthor","multi":false},
+    {"idocField":"updateauthor","solrField":"updateauthor","multi":false},
+    {"idocField":"versionauthor","solrField":"versionauthor","multi":false},
+    {"idocField":"versionname","solrField":"versionname","multi":false},
+    {"idocField":"attachmentname","solrField":"attachmentname","multi":false},
+    {"idocField":"aodocsurl","solrField":"aodocsurl","multi":false},
+    {"idocField":"versiondescription","solrField":"versiondescription","multi":false},
+    {"idocField":"ao_permission","solrField":"ao_permission","multi":true},
+    {"idocField":"tags","solrField":"tags","multi":true},
+    {"idocField":"category","solrField":"category","multi":true},
+    {"idocField":"client","solrField":"client","multi":false},
+    {"idocField":"comments","solrField":"comments","multi":false},
+    {"idocField":"richtext","solrField":"_text_","multi":false},
+    {"idocField":"folderpath","solrField":"filepath_t","multi":false},
+    {"idocField":"clean_mimetype","solrField":"clean_mimetype","multi":false},
+    {"idocField":"PID_*","dynamicSolrFieldType":"true"}
+  ]
+}

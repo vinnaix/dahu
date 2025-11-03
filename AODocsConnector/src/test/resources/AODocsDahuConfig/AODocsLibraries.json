@@ -1,0 +1,33 @@
+{
+  "DEFSettings":{
+    "inputQueues":["seed_queue"],
+    "outputQueues":["vector_queue"],
+    "stores":["AODocsConnectorStore"],
+    "serviceGroup":"AODocs",
+    "runAtStartup":"true"
+  },
+  "pluginSettings":{
+    "interval":"30000",
+    "autoStart":"true",
+    "google_service_jsonfile_path":  {"type": "env","values": {"env_name": "GOOGLE_SERVICE_ACCOUNT_JSON_PATH","default": "./serviceaccount.json"}},
+    "libraries": [
+    {
+      "libraryId":"MyLibraryID",
+      "name":"DahuDocManagementLibrary",
+      "domainName":"dahu.co.uk",
+      "storageAdmin":"dummy_id@dahu.co.uk",
+      "documentTypes": {
+       "items": [        {
+          "name":"SimpleDocument",
+          "value":"ReIu9du2uJ3HZGqZbS"
+        },
+        {
+          "name":"CompoundDocument",
+          "value":"ReIuHQavSvc3GQ15Fq"
+        }
+       ]
+      }
+    }
+    ]
+ }
+}

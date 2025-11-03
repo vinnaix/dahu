@@ -1,0 +1,13 @@
+{
+  "DEFSettings":{
+    "runAtStartup":"false"
+  },
+  "pluginSettings":{
+    "interval":"60000",
+    "solr_index":"aodocs_index",
+    "solr_hostname":{"type": "env","values": {"env_name": "SOLR_HOSTNAME","default": "dolly.office.dahu.co.uk"}},
+    "cloud_solr_hostname":{"type": "env","values": {"env_name": "SOLR_HOSTNAME","default": "solr-svc.default.svc.cluster.local"}},
+    "solr_port":"8983",
+    "logLevel":"WARN"
+  }
+}

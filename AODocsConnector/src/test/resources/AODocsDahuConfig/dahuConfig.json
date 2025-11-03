@@ -1,0 +1,107 @@
+{
+  "logLevel":"DEBUG",
+  "name":"DEF AODocs TEST",
+  "adminPort":"10102",
+  "threads":"40",
+  "admin":"true",
+  "adminUI":"true",
+  "searchUI": "false",
+  "DEFprotocol": "http",
+  "plugins":"./lib",
+  "CrossOrigin":"true",
+  "responseVersion":"2",
+  "securityTokenTTL":"3600",
+  "DEFRolesFile": "roles.json",
+  "commands":[
+  ],
+  "proxies":[
+  ],
+  "services":[
+    {
+      "name":"AODocsCrawlerMT",
+      "jar":"DahuAODocsConnector.jar",
+      "class":"com.dahu.plugins.edge.aodocs.AODocsMTConnector",
+      "settingsFile":"AODocsLibraries.json",
+      "logLevel":"DEBUG",
+      "threads":"1"
+    },
+    {
+      "name":"Vector",
+      "class":"com.dahu.vector.core.VectorService",
+      "logLevel":"DEBUG",
+      "settingsFile":"vector.json",
+      "threads":"2"
+    }
+  ],
+  "stores":[
+    {
+      "name":"AODocsConnectorStore",
+      "jar":"DahuAODOcs.jar",
+      "class":"com.dahu.plugins.edge.aodocs.storage.AODocsConnectorStore",
+      "settingsFile":"AODocsStorageSettings.json"
+    }
+  ],
+  "components":[
+    {
+      "name":"SolrIndexer",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.indexers.solr.SolrCloudIndexerProcessor"
+    },{
+      "name":"DebugProcessor",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.processors.DebugProcessor"
+    },{
+      "name":"SplitterProcessor",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.processors.HierarchicalFieldSplitter"
+    },
+    {
+      "name": "MimeTypePrettifier",
+      "class": "com.dahu.vector.core.processors.MimeTypePrettifier"
+    },
+    {
+      "name": "authenticator",
+      "class": "com.dahu.plugins.core.auth.SimpleAuthenticator",
+      "settingsFile": "AdminAuthenticator.json"
+    }, {
+      "name": "googleAuthenticator",
+      "class": "com.dahu.plugins.core.auth.Google.GoogleAuthenticator",
+      "settingsFile": "GoogleAuthenticator.json"
+    },
+    {
+      "name": "authorizer",
+      "class": "com.dahu.plugins.core.auth.SimpleAuthorizer",
+      "settingsFile": "AuthorizeSettings.json"
+    },{
+      "name":"AODocsFetchInjector",
+      "class":"com.dahu.aodocs.processors.DahuAODFetchInjector",
+      "jar":"DahuAODocsConnector.jar"
+    },{
+      "name":"DummyTerminator",
+      "class":"com.dahu.plugins.core.DummyTerminator"
+    }
+  ],
+  "queues":[
+    {
+      "name":"vector_queue",
+      "persistent":"false"
+    },
+    {
+      "name":"seed_queue",
+      "persistent":"false"
+    }
+  ],
+  "events": [
+    {
+      "name":"solrCommit",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.indexers.solr.CommitToSolr",
+      "settingsFile":"solrCommit.json"
+    },{
+      "name": "AODocsRefresh",
+      "jar":"DahuAODocsConnector.jar",
+      "class": "com.dahu.plugins.edge.aodocs.QueueSeederEvent",
+      "settingsFile": "AODocsLibraries.json"
+    }
+  ]
+}
