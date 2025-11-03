@@ -1,0 +1,11 @@
+{
+  "DEFSettings":{
+    "inputQueues":["outputqueue_jdbc"],
+    "serviceGroup":"Consumer",
+    "loglevel":"TRACE"
+  },
+  "pluginSettings": {
+    "autoStart":"true",
+    "filepath":"./TestQueueOutput_jdbc.txt"
+  }
+}

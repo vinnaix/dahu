@@ -1,0 +1,10 @@
+{
+  "resources":{
+    "logLevel":"TRACE"
+  },
+  "properties":{
+    "name":"FSWalkerStorage",
+    "crate_path":"./crates",
+    "trie_file":"FSCrate"
+  }
+}

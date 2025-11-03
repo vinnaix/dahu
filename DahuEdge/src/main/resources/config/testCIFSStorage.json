@@ -1,0 +1,10 @@
+{
+  "resources":{
+    "logLevel":"TRACE"
+  },
+  "properties":{
+    "name":"CIFSWalkerStorage",
+    "crate_path":"./crates",
+    "trie_file":"CIFSCrate"
+  }
+}

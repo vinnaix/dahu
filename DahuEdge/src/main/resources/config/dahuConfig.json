@@ -1,0 +1,88 @@
+{
+  "logLevel":"DEBUG",
+  "name":"DEF TEST",
+  "port":"10106",
+  "threads":"40",
+  "admin":"true",
+  "adminUI":"true",
+  "plugins":"./target/testPlugins",
+  "CrossOrigin":"true",
+  "responseVersion":"1",
+  "commands":[
+  ],
+  "proxies":[
+  ],
+  "instances":[
+    {
+      "name":"testFileCrawler",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.FileSysWalker",
+      "settingsFile":"testFSWalkerSettings.json",
+      "logLevel":"DEBUG"
+    },
+    {
+      "name":"testCIFSCrawler",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.CIFSShareWalker",
+      "settingsFile":"testCIFSWalkerSettings.json",
+      "logLevel":"DEBUG"
+    },{
+      "name":"Update QueueConsumer",
+      "jar":"DahuDEFServer.jar",
+      "class":"com.dahu.plugins.core.DummyQueueConsumer",
+      "settingsFile":"UpdateQueueConsumer.json",
+      "logLevel":"DEBUG"
+    },{
+      "name":"Insert QueueConsumer",
+      "jar":"DahuDEFServer.jar",
+      "class":"com.dahu.plugins.core.DummyQueueConsumer",
+      "settingsFile":"InsertQueueConsumer.json",
+      "logLevel":"DEBUG"
+    },{
+      "name":"Delete QueueConsumer",
+      "jar":"DahuDEFServer.jar",
+      "class":"com.dahu.plugins.core.DummyQueueConsumer",
+      "settingsFile":"DeleteQueueConsumer.json",
+      "logLevel":"DEBUG"
+    },{
+      "name":"UnchangedQueueConsumer",
+      "jar":"DahuDEFServer.jar",
+      "class":"com.dahu.plugins.core.DummyQueueConsumer",
+      "settingsFile":"UnchangedQueueConsumer.json",
+      "logLevel":"DEBUG"
+    }
+  ],
+  "services":[
+  ],
+  "stores":[
+    {
+      "name":"testCrateFS",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.crate.FSWalkerStorage",
+      "settingsFile":"testFSStorage.json"
+    },
+    {
+      "name":"testCrateCIFS",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.crate.FSWalkerStorage",
+      "settingsFile":"testCIFSStorage.json"
+    }
+  ],
+  "resources":[
+  ],
+  "queues":[
+    {
+      "name": "fscrawlqueue"
+    }, {
+      "name":"cifscrawlqueue"
+    },{
+      "name": "unchanged"
+    },{
+      "name": "deletes"
+    },{
+      "name": "inserts"
+    },{
+      "name":"updates"
+    }
+  ]
+}

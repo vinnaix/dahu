@@ -1,0 +1,11 @@
+{
+  "DEFSettings":{
+    "inputQueues":["outputqueue_crawler"],
+    "serviceGroup":"Consumer",
+    "loglevel":"TRACE"
+  },
+  "pluginSettings": {
+    "autoStart":"true",
+    "filepath":"./TestQueueOutput.txt"
+  }
+}

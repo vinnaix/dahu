@@ -1,0 +1,10 @@
+{
+  "resources":{
+    "logLevel":"TRACE",
+    "inputQueues":["deletes"],
+    "serviceName":"Queue Consumers"
+  },
+  "properties":{
+    "name":"Dummy Consumer For Deletes"
+  }
+}

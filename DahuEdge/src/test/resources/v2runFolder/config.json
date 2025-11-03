@@ -1,0 +1,46 @@
+{
+  "logLevel":"DEBUG",
+  "name":"DEF TEST",
+  "port":"10106",
+  "threads":"40",
+  "admin":"true",
+  "adminUI":"true",
+  "plugins":"../target/testPlugins",
+  "CrossOrigin":"true",
+  "responseVersion":"2",
+  "commands":[
+  ],
+  "proxies":[
+  ],
+  "services":[
+    {
+      "name":"Connector",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.jdbc.connector.JDBCConnector",
+      "settingsFile":"connector.json",
+      "logLevel":"DEBUG",
+      "threads":"1"
+    }
+  ],
+  "stores":[
+  ],
+  "resources":[
+    {
+      "name":"Connection",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.jdbc.connection.JDBCConnection",
+      "settingsFile":"JDBCConnection.json"
+    }
+  ],
+  "queues":[
+    {
+      "name": "fscrawlqueue"
+    }, {
+      "name":"cifscrawlqueue",
+      "persistent":"true"
+    },{
+      "name": "vector",
+      "persistent":"true"
+    }
+  ]
+}

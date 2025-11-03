@@ -1,0 +1,22 @@
+{
+  "resources":{
+    "logLevel":"TRACE",
+    "inputQueues":["fscrawlqueue"],
+    "outputQueues":["inserts","updates","unchanged","deletes"],
+    "serviceName":"Crawler Tests",
+    "stores":["testCrateFS"],
+    "threads":"1"
+  },
+  "properties":{
+    "insertQueueName":"inserts",
+    "updateQueueName":"updates",
+    "deleteQueueName":"deletes",
+    "unchangedQueueName":"unchanged",
+    "includeTypes":[],
+    "excludeTypes":[],
+    "includeFiles":[],
+    "excludeFiles":[".*\\.ds_store",".*\\.DS_Store",".*\\.exists"],
+    "stubTypes":[],
+    "startFolders":["/Users/vmcnamar"]
+  }
+}

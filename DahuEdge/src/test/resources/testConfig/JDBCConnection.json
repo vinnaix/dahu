@@ -1,0 +1,8 @@
+{
+  "pluginSettings": {
+    "driver_class": "org.sqlite.JDBC",
+    "sql_connection_string": "jdbc:sqlite:../target/sqlite/db/tmpdb",
+    "username":"",
+    "password":""
+  }
+}

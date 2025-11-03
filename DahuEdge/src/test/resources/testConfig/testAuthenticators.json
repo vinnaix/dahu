@@ -1,0 +1,17 @@
+{
+  "DEFSettings": {
+    "loglevel": "TRACE"
+  },
+  "pluginSettings": {
+    "authenticators": {
+      "auth": {
+        "priority": "1"
+      }
+    },
+    "authorizers": {
+      "authorizer": {
+        "priority": "1"
+      }
+    }
+  }
+}

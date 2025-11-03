@@ -1,0 +1,12 @@
+{
+  "DEFSettings":{},
+  "pluginSettings": {
+    "users": {
+      "admin": {
+        "password": {
+          "type": "string", "values": "DummyUnencryptedPasswordHere"},
+        "roles": "admin"
+      }
+    }
+  }
+}

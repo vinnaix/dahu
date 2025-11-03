@@ -1,0 +1,10 @@
+{
+  "DEFSettings":{
+    "logLevel":"TRACE"
+  },
+  "pluginSettings":{
+    "name":"LocalFilesCrate",
+    "crate_path":"./crates",
+    "trie_file":"LocalCrawlCrate"
+  }
+}

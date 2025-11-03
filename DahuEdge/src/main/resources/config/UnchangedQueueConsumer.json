@@ -1,0 +1,10 @@
+{
+  "resources":{
+    "logLevel":"TRACE",
+    "inputQueues":["unchanged"],
+    "serviceName":"Queue Consumers"
+  },
+  "properties":{
+    "name":"Dummy Consumer For Unchanged files"
+  }
+}

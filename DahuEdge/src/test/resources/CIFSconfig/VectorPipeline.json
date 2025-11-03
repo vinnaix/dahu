@@ -1,0 +1,26 @@
+{
+  "DEFSettings":{
+    "inputQueues":["outputqueue_crawler"],
+    "serviceGroup":"Vector Pipeline",
+    "threads":"1"
+  },
+  "pluginSettings": {
+    "autoStart":"false",
+    "components":{
+      "SplitterProcessor":{
+        "priority":"1",
+        "hier_metanames":"filepath"
+      },
+      "DebugProcessor":{
+        "priority":"2"
+      },
+      "SolrIndexer": {
+        "solr_index":"test_fs_v7",
+        "solr_hostname":"dolly.office.dahu.co.uk",
+        "solr_zkport":"8983",
+        "logLevel":"TRACE"
+
+      }
+    }
+  }
+}

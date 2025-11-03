@@ -1,0 +1,10 @@
+{
+  "DEFSettings":{
+    "logLevel":"TRACE"
+  },
+  "pluginSettings":{
+    "name":"SharedFilesCrate",
+    "crate_path":"./crates",
+    "trie_file":"SharedCrawlCrate"
+  }
+}

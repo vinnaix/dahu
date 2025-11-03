@@ -1,0 +1,83 @@
+{
+  "logLevel":"TRACE",
+  "name":"DEF TEST",
+  "port":"10104",
+  "threads":"40",
+  "admin":"true",
+  "adminUI":"true",
+  "plugins":"./testPlugins",
+  "CrossOrigin":"true",
+  "responseVersion":"2",
+  "commands":[
+  ],
+  "proxies":[
+  ],
+  "services":[
+    {
+      "name":"testFileCrawler",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.UniversalFileSysWalker",
+      "settingsFile":"LocalFiles.json",
+      "logLevel":"TRACE",
+      "threads":"1"
+    },{
+      "name":"testJDBC",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.jdbc.connector.JDBCConnector",
+      "settingsFile":"jdbc.json",
+      "logLevel":"TRACE",
+      "threads":"1"
+    },{
+      "name":"CrawlConsumer",
+      "jar":"DahuEdge.tests.jar",
+      "class":"com.dahu.Edge.testPlugins.ListeningConsumerLogger",
+      "settingsFile":"crawlconsumer.json",
+      "logLevel":"TRACE",
+      "threads":"1"
+    },{
+      "name":"JDBCConsumer",
+      "jar":"DahuEdge.tests.jar",
+      "class":"com.dahu.Edge.testPlugins.ListeningConsumerLogger",
+      "settingsFile":"jdbcconsumer.json",
+      "logLevel":"TRACE",
+      "threads":"1"
+    }
+  ],
+  "stores":[
+    {
+      "name":"LocalFilesCrate",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.storage.FSWalkerStorage",
+      "settingsFile":"LocalFilesCrateSettings.json"
+    },
+    {
+      "name":"SharedFilesCrate",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.storage.FSWalkerStorage",
+      "settingsFile":"SharedFilesCrateSettings.json"
+    }
+  ],
+  "components":[
+    {
+      "name":"Connection",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.jdbc.connection.JDBCConnection",
+      "settingsFile":"JDBCConnection.json"
+    }
+  ],
+  "queues":[
+    {
+      "name": "fscrawlqueue",
+      "persistent":"false"
+    }, {
+      "name":"cifscrawlqueue",
+      "persistent":"false"
+    },{
+      "name": "outputqueue_crawler",
+      "persistent":"false"
+    },{
+      "name": "outputqueue_jdbc",
+      "persistent":"false"
+    }
+  ]
+}

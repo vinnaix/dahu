@@ -1,0 +1,15 @@
+{
+  "users": {
+    "chris@dahu.co.uk": {
+      "roles": "admin,search"
+    },
+    "vince@dahu.co.uk": {
+      "roles": "search"
+    }
+  },
+  "groups": {
+    "lefties@dahu.co.uk": {
+      "roles": "search"
+    }
+  }
+}

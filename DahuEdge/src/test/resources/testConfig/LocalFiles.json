@@ -1,0 +1,15 @@
+{
+  "DEFSettings":{
+    "inputQueues":["fscrawlqueue"],
+    "outputQueues":["outputqueue_crawler"],
+    "serviceGroup":"Crawler Tests",
+    "stores":["LocalFilesCrate"],
+    "logLevel":"DEBUG"
+  },
+  "pluginSettings":{
+    "autoStart":"true",
+    "excludeTypes":["DS_Store","not"],
+    "excludeFiles":[".*~.*","dir0-0",".*snapshot.*",".*/folder2exclude",".*/notme.txt"],
+    "startFolders":["./crawldocs"]
+  }
+}

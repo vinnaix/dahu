@@ -1,0 +1,26 @@
+{
+  "resources":{
+    "logLevel":"TRACE",
+    "inputQueues":["cifscrawlqueue"],
+    "outputQueues":["inserts","updates","unchanged","deletes"],
+    "serviceName":"Crawler Tests",
+    "stores":["testCrateCIFS"],
+    "threads":"1"
+  },
+  "properties":{
+    "insertQueueName":"inserts",
+    "updateQueueName":"updates",
+    "deleteQueueName":"deletes",
+    "unchangedQueueName":"unchanged",
+    "servername":"didier",
+    "domain":"office.dahu.co.uk",
+    "username":"dahuqa",
+    "password":{"type":"encrypted","values":"EncryptedPasswordHere=="},
+    "includeTypes":[],
+    "excludeTypes":[],
+    "includeFiles":[],
+    "excludeFiles":[".*~.*"],
+    "stubTypes":[".exe",".dll"],
+    "startFolders":["smb://didier.office.dahu.co.uk/shareddata"]
+  }
+}

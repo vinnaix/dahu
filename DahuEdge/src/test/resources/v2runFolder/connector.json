@@ -1,0 +1,21 @@
+{
+  "DEFSettings":{
+    "outputQueues":["vector"],
+    "serviceGroup":"TestServices",
+    "loglevel":"TRACE"
+  },
+  "pluginSettings":{
+    "autoStart":"false",
+    "priority":"1",
+    "select_fields":"id,filepath,title,author",
+    "select_table":"TEST_STRINGS",
+    "where_clause":[""],
+    "hwm_column":["id"],
+    "primary_key_column_list":["id"],
+    "resources": {
+      "Connection": {
+        "connproperty": "another value injected from vector settings file"
+      }
+    }
+  }
+}

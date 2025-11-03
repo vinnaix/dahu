@@ -1,0 +1,10 @@
+{
+  "resources":{
+    "logLevel":"TRACE",
+    "inputQueues":["inserts"],
+    "serviceName":"Queue Consumers"
+  },
+  "properties":{
+    "name":"Dummy Consumer For Inserts"
+  }
+}

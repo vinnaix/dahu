@@ -1,0 +1,81 @@
+{
+  "logLevel":"TRACE",
+  "name":"DEF TEST",
+  "port":"10104",
+  "threads":"40",
+  "admin":"true",
+  "adminUI":"true",
+  "plugins":"./testPlugins",
+  "CrossOrigin":"true",
+  "responseVersion":"2",
+  "DEFRolesFile": "roles.json",
+  "securityTokenTTL":"3600",
+  "commands":[
+  ],
+  "proxies":[
+  ],
+  "services":[
+    {
+      "name":"DidierCrawler",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.UniversalFileSysWalker",
+      "settingsFile":"didier.json",
+      "logLevel":"TRACE",
+      "threads":"1"
+    },{
+      "name":"Vector",
+      "class":"com.dahu.vector.core.VectorService",
+      "settingsFile":"VectorPipeline.json",
+      "logLevel":"TRACE"
+    },{
+      "name":"Crawl1 Recovery",
+      "class":"com.dahu.plugins.edge.walkers.WalkerRecovery",
+      "settingsFile":"RecoverDidierCrawl.json",
+      "logLevel":"TRACE"
+    }
+
+  ],
+  "stores":[
+    {
+      "name":"SharedFilesCrate",
+      "jar":"DahuEDGE.jar",
+      "class":"com.dahu.plugins.edge.walkers.storage.FSWalkerStorage",
+      "settingsFile":"ShareCrateSettings.json"
+    }
+  ],
+  "components":[
+    {
+      "name":"SolrIndexer",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.indexers.solr.SolrCloudIndexerProcessor"
+    },{
+      "name":"DebugProcessor",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.processors.DebugProcessor"
+    },{
+      "name":"SplitterProcessor",
+      "jar":"DahuVector.jar",
+      "class":"com.dahu.vector.processors.HierarchicalFieldSplitter"
+    },
+    {
+      "name": "authenticator",
+      "class": "com.dahu.plugins.core.auth.SimpleAuthenticator",
+      "settingsFile": "testAuthenticateSettings.json"
+    },
+    {
+      "name": "authorizer",
+      "class": "com.dahu.plugins.core.auth.SimpleAuthorizer",
+      "settingsFile": "testAuthorizeSettings.json"
+    }
+
+  ],
+  "queues":[
+    {
+      "name":"cifscrawlqueue",
+      "persistent":"false"
+    },{
+      "name": "outputqueue_crawler",
+      "persistent":"false"
+    }
+  ]
+}

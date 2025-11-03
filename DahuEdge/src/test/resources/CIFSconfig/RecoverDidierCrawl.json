@@ -1,0 +1,13 @@
+{
+  "DEFSettings":{
+    "inputQueues":["cifscrawlqueue"],
+    "serviceGroup":"Recovery",
+    "threads":"1"
+  },
+  "pluginSettings": {
+    "autoStart":"false",
+    "solr_host:post":"dolly.office.dahu.co.uk:8983",
+    "index":"test_fs_v4",
+    "trie":"SharedCrawlCrate.trie"
+  }
+}
